@@ -4,6 +4,15 @@
 
 local VERSION = "1.4"
 
+--enUS
+local _STR_rANK="rank"
+local _STR_RANK="Rank"
+if ( GetLocale() == "zhCN" ) then
+    _STR_rANK = "等级";
+    _STR_RANK = "等级";
+end
+
+
 local _G = getfenv(0)
 
 local lastUpdate = 0    
@@ -65,7 +74,7 @@ end
 
 local function GetSpellSlotByName(name)
     name = string.lower(name)
-    local b, _, rank = string.find(name, "%(%s*rank%s+(%d+)%s*%)");
+    local b, _, rank = string.find(name, "%(%s*".._STR_rANK.."%s+(%d+)%s*%)");
     if b then name = (b > 1) and Trim(string.sub(name, 1, b - 1)) or "" end
 
     for tabIndex = GetNumSpellTabs(), 1, -1 do
@@ -73,7 +82,7 @@ local function GetSpellSlotByName(name)
         for index = offset + count, offset + 1, -1 do
             local spell, subSpell = GetSpellName(index, "spell")
             spell = string.lower(spell) 
-            if name == spell and (not rank or subSpell == "Rank " .. rank) then
+            if name == spell and (not rank or subSpell == _STR_RANK.." " .. rank) then
                 return index
             end
         end
@@ -307,8 +316,12 @@ local COMMANDS = {
         end
     
         for _, name in ipairs(Split(s, ",")) do
-            local spellSlot = GetSpellSlotByName(Trim(name))
-            table.insert(sequence.spells, GetSpellSlotByName(Trim(name)))
+            local spellSlot = (Trim(name))
+            if spellSlot==nil then
+                Log("Invalid SpellName! GetSpellSlotByName Got nil For "..Trim(name))
+            else 
+                table.insert(sequence.spells, spellSlot)
+            end
         end
     end,
 
