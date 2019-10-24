@@ -316,7 +316,7 @@ local COMMANDS = {
         end
     
         for _, name in ipairs(Split(s, ",")) do
-            local spellSlot = (Trim(name))
+            local spellSlot = GetSpellSlotByName(Trim(name))
             if spellSlot==nil then
                 Log("Invalid SpellName! GetSpellSlotByName Got nil For "..Trim(name))
             else 
